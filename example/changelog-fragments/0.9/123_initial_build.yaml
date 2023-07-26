@@ -1,0 +1,5 @@
+added:
+  - Add initial release of changelog-fragments-creator [#123]
+  - Add docs for changelog-fragments-creator [#123]
+removed:
+  - Removed old beta releases of changelog-fragments-creator [#123]
