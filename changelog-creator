@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+
+# Changelog Fragments Creator
+# Create a global changelog file with changelog fragments by keeping the syntax of
+# "keepachangelog", see also https://keepachangelog.com/en/1.1.0/.
+# Copyright (C) 2023  Florian Paul Azim Hoberg @gyptazy <gyptazy@gyptazy.ch>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import argparse
+import os
+import pathlib
+import sys
+import yaml
+from distutils.version import StrictVersion
+
+
+def main():
+    """ Run changelog-fragments-creator main """
+    # Define basic vars
+    changelog = {}
+
+    # Run the routine
+    arguments = parse_arguments()
+    fragment_files = get_fragment_candidates(arguments)
+    create_changelog_information(changelog, fragment_files)
+    release_versions_sorted = sort_release_versions(changelog)
+    write_changelog(arguments, changelog, release_versions_sorted)
+
+
+def parse_arguments():
+    """ Parse arguments by cli input """
+    args_parser = argparse.ArgumentParser(description='Changelog Fragments Creator', usage='%(prog)s')
+    args_parser.add_argument('-f', '--fragments-path', type=str, help='Path to changelog fragments.', required=True)
+    args_parser.add_argument('-o', '--output-path', type=str, help='Path to changelog output file.', required=False)
+    args_parser.add_argument('-c', '--custom-fragments-extension', type=str, help='Custom fragments extension to honor.', required=False)
+
+    return args_parser.parse_args()
+
+
+def get_fragment_candidates(arguments):
+    """ Get fragment candidates """
+    # Define basic vars
+    fragments_extensions = [
+        '.yaml',
+        '.yml'
+    ]
+
+    # Add custom extension provided by cli args if needed
+    if arguments.custom_fragments_extension:
+        # Multiple arguments can be passed by a comma separated list
+        fragments_extensions += arguments.custom_fragments_extension.split(',')
+
+    # Return all recursive found files with valid extension
+    return list(filter(lambda p: p.suffix in fragments_extensions, pathlib.Path(arguments.fragments_path).rglob('*')))
+
+
+def create_changelog_information(changelog, fragment_files):
+    """ Create changelog information by fragment files """
+    # Iterate every changelog file
+    for changelog_fragment in fragment_files:
+        changelog_content = read_yaml_file(changelog_fragment)
+        release_version = get_release_version(changelog_fragment)
+        release_date = get_release_date(changelog_content)
+        create_changelog_entry(changelog, changelog_content, release_version, release_date)
+
+
+def read_yaml_file(file_name):
+    """ Read content of a given yaml file """
+    with open(file_name, "r") as stream:
+        try:
+            return(yaml.safe_load(stream))
+        except yaml.YAMLError as error_message:
+            print(error_message)
+
+
+def write_text_file(file_name, file_content):
+    """ Write content to a text file """
+    with open(file_name, 'w') as stream:
+        try:
+            for line in file_content:
+                stream.write(f'{line}\n')
+        except IOError:
+            print('Error: Could not write file.')
+
+
+def get_release_version(changelog_fragment):
+    """ Get release version from changelog fragment path """
+    path_name, file_name = os.path.split(changelog_fragment)
+    return os.path.basename(path_name)
+
+
+def get_release_date(changelog_content):
+    """ Get release date """
+    return changelog_content.get('date', False)
+
+
+def create_changelog_entry(changelog, changelog_content, release_version, release_date):
+    """ Create a single changelog entry for changelog file """
+    # Define basic vars
+    valid_states = [
+        'added',
+        'fixed',
+        'removed',
+        'deprecated'
+        'changed',
+        'security'
+    ]
+
+    # Define release version if not already present
+    if not changelog.get(release_version):
+        changelog[release_version] = {}
+
+    # Define release date is not already present
+    if release_date:
+        changelog[release_version]['release_date'] = release_date
+
+    # Validate if the changelogs are belonging to a valid group of states
+    for valid_state in valid_states:
+        if changelog_content.get(valid_state):
+            # Create for each present and valid state an empty list
+            # to append changelog entries
+            if not changelog[release_version].get(valid_state.lower()):
+                changelog[release_version][valid_state] = []
+
+            # Append changelog entries
+            changelog[release_version][valid_state] += changelog_content[valid_state]
+
+
+def sort_release_versions(changelog):
+    """ Sort release versions """
+    release_versions = list(changelog.keys())
+    return sorted(release_versions, key=StrictVersion, reverse=True)
+
+
+def write_changelog(arguments, changelog, release_versions_sorted):
+    """ Write changelog file """
+    # Define basic vars
+    output = []
+
+    # Validate for a custom output path and name for
+    # the changelog file
+    if arguments.output_path:
+        file_name = arguments.output_path
+    else:
+        file_name = "CHANGELOG.md"
+
+    # Define basic output header
+    output.append('# Changelog')
+    output.append('\nAll notable changes to this project will be documented in this file.')
+    output.append('\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),')
+    output.append('and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).')
+
+    # Include content for the changelog file and generate
+    # content for each release version
+    for release_version in release_versions_sorted:
+        release_date = changelog[release_version].get('release_date', False)
+        if not release_date:
+            print(f'Error: No release date found for release: {release_version}. Check release_meta.yml file.')
+            sys.exit(1)
+
+        # Create a list of all changelog states for each version
+        release_states = list(changelog[release_version].keys())
+
+        # Template release version specific template
+        output_release_header = f'\n\n## [{release_version}] - {release_date}'
+        output.append(output_release_header)
+
+        # Template the release states and their contents
+        for release_state in release_states:
+            # Do not include the release_meta content
+            # like the release_date
+            if release_state != 'release_date':
+
+                # Keep the changelog syntax and capitalize the first letter
+                output_release_state = f'\n### {release_state.capitalize()}\n'
+                output.append(output_release_state)
+
+                # To keep the changelog syntax we need to look when
+                # avoiding templating
+                for release_state_content in changelog[release_version][release_state]:
+                    output.append(f'- {release_state_content}')
+
+    # Write changelog output file
+    write_text_file(file_name, output)
+
+
+main()
