@@ -1,0 +1,5 @@
+changelog-fragments-creator (1.0.0) unstable; urgency=low
+
+  * Initial release of changelog-creater for changelog fragments
+
+ -- Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>  Sat, 05 Aug 2023 23:07:17 -0200
