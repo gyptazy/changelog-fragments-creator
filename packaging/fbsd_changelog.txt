@@ -1,0 +1,2 @@
+2023-08-05:
+    Initial release of changelog-creater for changelog fragments

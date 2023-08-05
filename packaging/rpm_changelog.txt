@@ -1,0 +1,2 @@
+* Sat Aug 05 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
+- Initial release of changelog-creater for changelog fragments
