@@ -1,0 +1,2 @@
+fixed:
+  - Fixed the accidental interpretation of colons as dictionaries (#3)

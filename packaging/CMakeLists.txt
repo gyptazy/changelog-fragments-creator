@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(ChangelogFragmentsCreator VERSION 1.0)
+project(ChangelogFragmentsCreator VERSION 1.1)
 
 install(FILES ../changelog-creator DESTINATION bin)
 
@@ -29,6 +29,7 @@ set(CPACK_DEBIAN_PACKAGE_SUMMARY "changelog-creater - A tool to create a complet
 set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "changelog-creater - A tool to create a complete changelog by changelog fragments.")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/deb_changelog.txt")
 set(CPACK_DEBIAN_PACKAGE_REQUIRES "python3-yaml")
+set(CPACK_DEBIAN_PACKAGE_LICENSE "GPL 3.0")
 
 
 # FreeBSD packaging
@@ -37,6 +38,7 @@ set(CPACK_FREEBSD_PACKAGE_SUMMARY "changelog-creater - A tool to create a comple
 set(CPACK_FREEBSD_PACKAGE_DESCRIPTION "changelog-creater - A tool to create a complete changelog by changelog fragments.")
 set(CPACK_FREEBSD_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/fbsd_changelog.txt")
 set(CPACK_FREEBSD_PACKAGE_REQUIRES "python3-yaml")
+set(CPACK_FREEBSD_PACKAGE_LICENSE "GPL 3.0")
 
 
 # Install
