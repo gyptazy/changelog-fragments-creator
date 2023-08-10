@@ -1,2 +1,5 @@
+* Thu Aug 10 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
+- Fixed the accidental interpretation of colons as dictionaries (#3)
+
 * Sat Aug 05 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
 - Initial release of changelog-creater for changelog fragments

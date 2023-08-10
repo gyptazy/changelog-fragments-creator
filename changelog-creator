@@ -71,9 +71,29 @@ def create_changelog_information(changelog, fragment_files):
     # Iterate every changelog file
     for changelog_fragment in fragment_files:
         changelog_content = read_yaml_file(changelog_fragment)
+        changelog_content = _convert_dict_to_string(changelog_content)
         release_version = get_release_version(changelog_fragment)
         release_date = get_release_date(changelog_content)
         create_changelog_entry(changelog, changelog_content, release_version, release_date)
+
+
+def _convert_dict_to_string(changelog_content):
+    """ Convert a dict to string when fragments contain colons """
+    # Iterate every fragment
+    for key, value in changelog_content.items():
+        if type(value) == list:
+            adjusted_fragments = []
+            for changelog_entry in value:
+                # Validate if the value of the changelog fragment contains a dict
+                if type(changelog_entry) == dict:
+                    # Convert the dict to a string
+                    for fragment_key in changelog_entry:
+                        string = str(fragment_key) + ':' + changelog_entry[fragment_key] + ' '
+                        adjusted_fragments.append(string)
+                    # Update changelog content with new list containing the string structure
+                    changelog_content[key] = adjusted_fragments
+
+    return changelog_content
 
 
 def read_yaml_file(file_name):

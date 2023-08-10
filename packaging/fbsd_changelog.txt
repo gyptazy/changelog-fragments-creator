@@ -1,2 +1,5 @@
+2023-08-10:
+    Fixed the accidental interpretation of colons as dictionaries (#3)
+
 2023-08-05:
     Initial release of changelog-creater for changelog fragments
