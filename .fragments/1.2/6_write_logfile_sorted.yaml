@@ -1,0 +1,2 @@
+fixed:
+  - Write logfile entries (e.g. added, changed, etc.) in an alphabetically sorted way (#6).

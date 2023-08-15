@@ -1,3 +1,6 @@
+* Thu Aug 15 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
+- Write logfile entries (e.g. added, changed, etc.) in an alphabetically sorted way (#6)
+
 * Thu Aug 10 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
 - Fixed the accidental interpretation of colons as dictionaries (#3)
 
