@@ -198,7 +198,7 @@ def write_changelog(arguments, changelog, release_versions_sorted):
         output.append(output_release_header)
 
         # Template the release states and their contents
-        for release_state in release_states:
+        for release_state in sorted(release_states):
             # Do not include the release_meta content
             # like the release_date
             if release_state != 'release_date':
