@@ -1,3 +1,6 @@
+* Sun Oct 15 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
+- Add new option `-s` to skip adding changelogs for releases which are still draft (#8)
+
 * Thu Aug 15 2023 Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>
 - Write logfile entries (e.g. added, changed, etc.) in an alphabetically sorted way (#6)
 

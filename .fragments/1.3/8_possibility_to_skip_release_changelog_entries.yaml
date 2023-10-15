@@ -1,0 +1,2 @@
+added:
+  - Add new option `-s` to skip adding changelogs for releases which are still draft (#8).

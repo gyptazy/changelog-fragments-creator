@@ -1,3 +1,9 @@
+changelog-fragments-creator (1.3.0) unstable; urgency=low
+
+  * Add new option `-s` to skip adding changelogs for releases which are still draft (#8).
+
+ -- Florian Paul Azim Hoberg <gyptazy@gyptazy.ch>  Sun, 15 Oct 2023 16:58:12 -0200
+
 changelog-fragments-creator (1.2.0) unstable; urgency=low
 
   * Write logfile entries (e.g. added, changed, etc.) in an alphabetically sorted way (#6)

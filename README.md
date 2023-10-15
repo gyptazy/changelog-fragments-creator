@@ -111,6 +111,7 @@ The following options and parameters are currently supported:
 | -f | --fragments-path | Path to changelog fragments where all release versions are present |
 | -o | --output-path | Path (including name) where to write changelog file (default: ./CHANGELOG.md) |
 | -c | --custom-fragments-extension | Add custom changelog fragment extensions (default: .yml, .yaml) |
+| -s | --skip-tbd | Option to skip adding releases which are in draft but already have changelog fragments |
 
 ### Supported Systems
 The goal is to support as many platforms and systems as possible which only needs a small Python environment without any further custom imports. Therefore, this is supported to run on:
