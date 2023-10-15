@@ -44,6 +44,7 @@ def parse_arguments():
     args_parser = argparse.ArgumentParser(description='Changelog Fragments Creator', usage='%(prog)s')
     args_parser.add_argument('-f', '--fragments-path', type=str, help='Path to changelog fragments.', required=True)
     args_parser.add_argument('-o', '--output-path', type=str, help='Path to changelog output file.', required=False)
+    args_parser.add_argument('-s', '--skip-tbd', help='Skip changelog without date and defined as TBD.', action='store_true', required=False)
     args_parser.add_argument('-c', '--custom-fragments-extension', type=str, help='Custom fragments extension to honor.', required=False)
 
     return args_parser.parse_args()
@@ -185,32 +186,37 @@ def write_changelog(arguments, changelog, release_versions_sorted):
     # Include content for the changelog file and generate
     # content for each release version
     for release_version in release_versions_sorted:
+
         release_date = changelog[release_version].get('release_date', False)
         if not release_date:
             print(f'Error: No release date found for release: {release_version}. Check release_meta.yml file.')
             sys.exit(1)
 
-        # Create a list of all changelog states for each version
-        release_states = list(changelog[release_version].keys())
+        # Skip release changelog entry if this is not yet done
+        if arguments.skip_tbd and release_date == 'TBD':
+            print(f'Skipping changelog entry for release version: {release_version}')
+        else:
+            # Create a list of all changelog states for each version
+            release_states = list(changelog[release_version].keys())
 
-        # Template release version specific template
-        output_release_header = f'\n\n## [{release_version}] - {release_date}'
-        output.append(output_release_header)
+            # Template release version specific template
+            output_release_header = f'\n\n## [{release_version}] - {release_date}'
+            output.append(output_release_header)
 
-        # Template the release states and their contents
-        for release_state in sorted(release_states):
-            # Do not include the release_meta content
-            # like the release_date
-            if release_state != 'release_date':
+            # Template the release states and their contents
+            for release_state in sorted(release_states):
+                # Do not include the release_meta content
+                # like the release_date
+                if release_state != 'release_date':
 
-                # Keep the changelog syntax and capitalize the first letter
-                output_release_state = f'\n### {release_state.capitalize()}\n'
-                output.append(output_release_state)
+                    # Keep the changelog syntax and capitalize the first letter
+                    output_release_state = f'\n### {release_state.capitalize()}\n'
+                    output.append(output_release_state)
 
-                # To keep the changelog syntax we need to look when
-                # avoiding templating
-                for release_state_content in changelog[release_version][release_state]:
-                    output.append(f'- {release_state_content}')
+                    # To keep the changelog syntax we need to look when
+                    # avoiding templating
+                    for release_state_content in changelog[release_version][release_state]:
+                        output.append(f'- {release_state_content}')
 
     # Write changelog output file
     write_text_file(file_name, output)

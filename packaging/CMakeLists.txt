@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(ChangelogFragmentsCreator VERSION 1.2)
+project(ChangelogFragmentsCreator VERSION 1.3)
 
 install(FILES ../changelog-creator DESTINATION bin)
 
