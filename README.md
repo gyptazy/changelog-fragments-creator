@@ -1,6 +1,6 @@
 # Changelog Fragments Creator
 
-<img align="left" src="https://gyptazy.ch/wp-content/uploads/2023/07/changelog-fragments-creator.jpg"/>
+<img align="left" src="https://cdn.gyptazy.ch/images/changelog-fragments-creator.jpg"/>
 <br>
 
 <p float="center"><img src="https://img.shields.io/github/license/gyptazy/changelog-fragments-creator"/><img src="https://img.shields.io/github/contributors/gyptazy/changelog-fragments-creator"/><img src="https://img.shields.io/github/last-commit/gyptazy/changelog-fragments-creator/main"/><img src="https://img.shields.io/github/issues-raw/gyptazy/changelog-fragments-creator"/><img src="https://img.shields.io/github/issues-pr/gyptazy/changelog-fragments-creator"/></p>
